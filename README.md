@@ -1,13 +1,16 @@
 This is an Automation engineering challenge.
 -
+I used the playwright test tool.
+
+
 You can:
  - Watch the test plan + short explaination in TEST_PLAN.docx.
  - Watch the tests code in the TESTS directory in the CHECKOUT_TESTS.SPEC.TS
    (There are 2 tests: 'Check if subtotal + tax = total' and 'Check if product features match the summary')
  - Download the screen video while tests are running, in WATCH_TEST_SCREEN.zip
  - See Commented previous attempts in the WATCH_MY_ATTEMPTS directory. Numbered versions.
+  
  
-
 
 
 Main sources of information:
