@@ -1,0 +1,18 @@
+{
+  "name": "elementor_test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+   "test:watch": "nodemon --watch tests --ext js,ts --exec 'npx playwright test'"
+}
+,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.9.3",
+    "nodemon": "^3.1.7"
+  }
+}
