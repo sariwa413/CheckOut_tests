@@ -10,6 +10,10 @@ You can:
  - Download the screen video while tests are running, in WATCH_TEST_SCREEN.zip
  - See Commented previous attempts in the WATCH_MY_ATTEMPTS directory. Numbered versions.
    (The code in previous versions is sequential and without the need to navigate to the checkout page before each test, compared to the final code which is more modular.)
+
+   -- Update - 
+   I added another file LOOP_MUKTIPLE_SCENARIOS in which I show my atittude for multiple scenarios testing.
+   There's an explanation in the file's header.
    
   
  
