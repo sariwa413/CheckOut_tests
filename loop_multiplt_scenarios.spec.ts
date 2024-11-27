@@ -1,9 +1,11 @@
-import { Page, test, expect } from '@playwright/test';
+
 
 /// After pushing my code (Today's morning), I got this Idea to write a loop for all the optional scenarios of a customer purchase, to test every possible case ever...
 /// I was writing the main concept and dealing with the fact tests are hard to be call in a loop, So I worked around this restriction by a nested call as follows:
 ///main test(loop function(test)).
 ///Im pushing this code to show my more generic atittude.
+
+import { Page, test, expect } from '@playwright/test';
 
 async function CheckOut_navigator_func (page: Page , test, runTest:(page)=>void) {
 
@@ -28,7 +30,7 @@ async function CheckOut_navigator_func (page: Page , test, runTest:(page)=>void)
 const allPcount = await allProducts.count()
     //await elementorAi.waitFor({ state: 'visible' });
     const plansCountEnum = [4, 4, 3, 3, 4, 4, 0, 0]
-    for (let i = 0; i <allPcount-1; i++) {
+    for (let i = 1; i <allPcount-1; i++) {
         await page.goto('https://elementor.com/', { waitUntil: 'networkidle', timeout: 120000 });
         console.log('started looping')
         await catalogButton.waitFor({ state: 'visible' });
@@ -38,8 +40,9 @@ const allPcount = await allProducts.count()
         console.log(`Found visible product at index ${i}`);
         await product.click();
         console.log('ive clicked')
-        const buyNow1 = page.locator('[aria-label="Get it now"]');
-        const buyNow2 = page.locator('[aria-label="Get Started With Elementor"]');
+        await page.waitForLoadState('networkidle');
+        const buyNow1 = page.locator('[aria-label="Get it now"]')?.first();
+        const buyNow2 = page.locator('[aria-label="Get Started With Elementor"]')?.first();
 
         const buyNowButton = await buyNow1.count()>0? buyNow1: buyNow2// remember the || left todo , [aria-label="Get Started With Elementor"]
         //const buyNowButton2 = page.locator('[aria-label="Get it now"]', {hasText:'Get it Now'}).first()
@@ -68,10 +71,8 @@ const allPcount = await allProducts.count()
             console.log('clicked the plan')
             //await page.waitForLoadState('networkidle');
             await expect(page).toHaveURL(/^https:\/\/my\.elementor\.com\/checkout-2/, { timeout: 60000 });
-            try{await runTest(page)}
-            catch(error){
-                console.log('total sum is not exactly ok')
-            }
+            await runTest(page)
+           
           
           ////
             
