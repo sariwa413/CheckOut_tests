@@ -4,8 +4,12 @@
 /// I was writing the main concept and dealing with the fact tests are hard to be call in a loop, So I worked around this restriction by a nested call as follows:
 ///main test(loop function(test)).
 ///Im pushing this code to show my more generic atittude.
-
 import { Page, test, expect } from '@playwright/test';
+
+/// After pushing my code (Today's morning), I got this Idea to write a loop for all the optional scenarios of a customer purchase, to test every possible case ever...
+/// I was writing the main concept and dealing with the fact tests are hard to be call in a loop, So I tried to work around this restriction.
+///The code still doesnt run and I want to push all the code on time (it's 14:40:)
+///So Im pushing this code to show my more generic atittude.
 
 async function CheckOut_navigator_func (page: Page , test, runTest:(page)=>void) {
 
@@ -39,8 +43,11 @@ const allPcount = await allProducts.count()
         const product = allProducts.nth(i);
         console.log(`Found visible product at index ${i}`);
         await product.click();
+        page.waitForTimeout(3000)
         console.log('ive clicked')
-        await page.waitForLoadState('networkidle');
+       
+        //await page.waitForLoadState('networkidle');
+        
         const buyNow1 = page.locator('[aria-label="Get it now"]')?.first();
         const buyNow2 = page.locator('[aria-label="Get Started With Elementor"]')?.first();
 
@@ -131,6 +138,19 @@ const allPcount = await allProducts.count()
     //     expect(totalCount).toBe(productFeatures.length)
 
     // });
+
+    
+
+test('test every case', async ({ page }) => {
+    await CheckOut_navigator_func(page,test,CheckSum)
+})
+
+
+
+
+           
+
+ 
 
     
 
