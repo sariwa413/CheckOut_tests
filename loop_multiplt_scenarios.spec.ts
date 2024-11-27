@@ -3,15 +3,13 @@
 /// After pushing my code (Today's morning), I got this Idea to write a loop for all the optional scenarios of a customer purchase, to test every possible case ever...
 /// I was writing the main concept and dealing with the fact tests are hard to be call in a loop, So I worked around this restriction by a nested call as follows:
 ///main test(loop function(test)).
+//This code loops over the plans for every product and tests the subtotal+tax=total test.
 ///Im pushing this code to show my more generic atittude.
-import { Page, test, expect } from '@playwright/test';
+import { Page, test, expect, Browser } from '@playwright/test';
 
-/// After pushing my code (Today's morning), I got this Idea to write a loop for all the optional scenarios of a customer purchase, to test every possible case ever...
-/// I was writing the main concept and dealing with the fact tests are hard to be call in a loop, So I tried to work around this restriction.
-///The code still doesnt run and I want to push all the code on time (it's 14:40:)
-///So Im pushing this code to show my more generic atittude.
 
-async function CheckOut_navigator_func (page: Page , test, runTest:(page)=>void) {
+
+async function CheckOut_navigator_func (page: Page , test, runTest:(page)=>void, browser) {
 
     // automate the journey to checkout page
 
@@ -34,9 +32,9 @@ async function CheckOut_navigator_func (page: Page , test, runTest:(page)=>void)
 const allPcount = await allProducts.count()
     //await elementorAi.waitFor({ state: 'visible' });
     const plansCountEnum = [4, 4, 3, 3, 4, 4, 0, 0]
-    for (let i = 1; i <allPcount-1; i++) {
-        await page.goto('https://elementor.com/', { waitUntil: 'networkidle', timeout: 120000 });
-        console.log('started looping')
+    for (let i = 0; i <6; i++) {
+        await page.goto('https://elementor.com/', { waitUntil: 'networkidle', timeout: 180000 });
+        console.log(`product number ${i+1}`)
         await catalogButton.waitFor({ state: 'visible' });
         console.log('visible! im clicking product')
         await catalogButton.click();
@@ -49,9 +47,13 @@ const allPcount = await allProducts.count()
         //await page.waitForLoadState('networkidle');
         
         const buyNow1 = page.locator('[aria-label="Get it now"]')?.first();
-        const buyNow2 = page.locator('[aria-label="Get Started With Elementor"]')?.first();
+        const buyNow2 = page.locator('[aria-label="Get Started With Elementor"]', {hasText:'Now'})?.first();
+        //const buyNow2 = page.locator('text=/Now$/');
 
-        const buyNowButton = await buyNow1.count()>0? buyNow1: buyNow2// remember the || left todo , [aria-label="Get Started With Elementor"]
+        //const buyNow3 = page.locator('[aria-label="Get Started With Elementor"]', {hasText:'Buy Now'})?.first();
+
+
+        const buyNowButton = await buyNow1.count()>0? buyNow1: buyNow2 // remember the || left todo , [aria-label="Get Started With Elementor"]
         //const buyNowButton2 = page.locator('[aria-label="Get it now"]', {hasText:'Get it Now'}).first()
         //const buyNowButton =  await buyNowButton1.isVisible() ? buyNowButton1 : buyNowButton2;
         await buyNowButton.waitFor({ state: 'visible' });
@@ -68,7 +70,7 @@ const allPcount = await allProducts.count()
         for (let j = 0; j < Math.floor(plansCountEnum[i]); j++) {
         
             
-            console.log(plansCountEnum[i])
+            console.log(`plan number ${j}`)
             await page.goto(plansPage)
             const plan = await planButtons.nth(j);
             //const productFeatures = await plansFeatures.nth(i).allInnerTexts()
@@ -85,7 +87,9 @@ const allPcount = await allProducts.count()
             
         
     
-    }}}
+    }}
+    await expect(1).toBe(1)
+}
 
    
    async  function CheckSum (page) {
@@ -104,15 +108,19 @@ const allPcount = await allProducts.count()
         const totalLocator = await page.locator('[data-test="summaryTotalPrice"] bdi');
         await totalLocator.waitFor({ state: 'visible' });
         const totalText = await totalLocator.innerText();
+        console.log(`total is: ${totalText}`)
 
-
-        const subTotal = parseFloat(subTotalText.replace('₪', '').trim());
-        const tax = parseFloat(taxText.replace('₪', '').trim());
-        const total = parseFloat(totalText.replace('₪', '').trim());
+        //removed kamas to avoid problems in parsing
+        const subTotal = parseFloat(subTotalText.replace('₪', '').trim().replace(/,/g, ""));
+        const tax = parseFloat(taxText.replace('₪', '').trim().replace(/,/g, ""));
+        const total = parseFloat(totalText.replace('₪', '').trim().replace(/,/g, ""));
+        console.log(`subTotal is ${subTotal}`)
+        console.log(`tax is ${tax}`)
         console.log(tax)
+        const sum= parseFloat((subTotal + tax).toFixed(2));
 
         // the test---
-        expect(subTotal + tax).toBe(total);
+        expect(sum).toBe(total);
 
     };
     // await test.step('Check if product features match the summary', async () => {
@@ -141,19 +149,6 @@ const allPcount = await allProducts.count()
 
     
 
-test('test every case', async ({ page }) => {
-    await CheckOut_navigator_func(page,test,CheckSum)
-})
-
-
-
-
-           
-
- 
-
-    
-
-test('test every case', async ({ page }) => {
-    await CheckOut_navigator_func(page,test,CheckSum)
+test('test every case', async ({ page}, browser) => {
+    await CheckOut_navigator_func(page,test,CheckSum, browser)
 })
